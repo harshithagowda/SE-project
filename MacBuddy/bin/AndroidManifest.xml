@@ -33,9 +33,9 @@
             android:screenOrientation="portrait"></activity>
         <activity android:name="RegActivity"
             android:screenOrientation="portrait"></activity>
-        <activity android:name="Dashboard"
+        <activity android:name="DashboardActivity"
             android:screenOrientation="portrait"></activity>
-        <activity android:name="CreateEvent"
+        <activity android:name="CreateEventActivity"
             android:screenOrientation="portrait"></activity>
     </application>
 </manifest>

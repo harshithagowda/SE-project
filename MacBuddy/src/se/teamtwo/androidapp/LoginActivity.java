@@ -36,7 +36,7 @@ public class LoginActivity extends Activity {
 	HttpResponse response;
 	
 	// Set the preferences
-	public static final String PREFS_NAME = "LoginPrefs";
+	//public static final String PREFS_NAME = "LoginPrefs";
 	ProgressDialog dialog = null;
 	EditText edittext_name = null;
 	EditText edittext_password = null;
@@ -85,7 +85,7 @@ public class LoginActivity extends Activity {
 			httpClient = new DefaultHttpClient();
 			
 			// Send the HTTP request
-			httpPost = new HttpPost("http://129.107.150.47:8080/LoginActions/loginUser.php");
+			httpPost = new HttpPost("http://192.168.1.13:8080/LoginActions/loginUser.php");
 			
 			// Bind the parameters
 			nameValuePairs = new ArrayList<NameValuePair>(2);
@@ -126,7 +126,10 @@ public class LoginActivity extends Activity {
 				});
 				
 				// Start the activity once the user credentials validation is approved
-				startActivity(new Intent(LoginActivity.this, Dashboard.class));
+
+				Intent i = new Intent(LoginActivity.this, DashboardActivity.class); 
+				 i.putExtra("username",edittext_name.getText().toString().trim());
+                    startActivity(i);
 			} 
 			// If user details not found in Database, display appropriate error message
 			else {

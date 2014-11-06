@@ -8,17 +8,26 @@ import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class Dashboard extends Activity {
+public class DashboardActivity extends Activity {
 
+	Bundle extras;
+	String username;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		
 		setContentView(R.layout.dashboard);
+		extras = getIntent().getExtras();
+		if (extras != null) {
+			   username = extras.getString("username");
+			}
 		Button createButton = (Button) findViewById(R.id.create_event_button);
 		createButton.setOnClickListener(new OnClickListener() {
 			// onclicklistener for create event
 			public void onClick(View v) {
-				Intent i = new Intent(Dashboard.this, CreateEvent.class);
+				Intent i = new Intent(DashboardActivity.this, CreateEventActivity.class);
+				i.putExtra("username",username);
 				startActivity(i);
 				// navigates from the dashboard to create event screen
 			}

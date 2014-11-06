@@ -29,10 +29,10 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 // This class focuses on creating game invites 
-public class CreateEvent extends Activity {
+public class CreateEventActivity extends Activity {
 
 	// Add the preferences
-	public static final String PREFS_NAME = "EventCreationPrefs";
+	//public static final String PREFS_NAME = "EventCreationPrefs";
 
 	// Variable declarations
 	EditText edittext_event_name;
@@ -41,6 +41,7 @@ public class CreateEvent extends Activity {
 	Button createButton;
 	String event_schedule;
 	String string_event_name;
+	String username;
 	ProgressDialog progressDialogEvent;
 	int eventCheck = 0;
 	JSONParser jsonParserEvent = new JSONParser();
@@ -52,12 +53,18 @@ public class CreateEvent extends Activity {
 	private static final String EVENT_SUCCESS = "success";
 	String chosenGame = "test";
 	ArrayAdapter<String> adapter;
-
+	Bundle extras;
+	
 	// Overridden method onCreate
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.create_event);
+		extras = getIntent().getExtras();
+		if (extras != null) {
+			   username = extras.getString("username");
+
+			}
 
 		// Spinner from XML
 		gameSpinner = (Spinner) findViewById(R.id.spinner);
@@ -87,14 +94,12 @@ public class CreateEvent extends Activity {
 							int arg2, long arg3) {
 						int position = gameSpinner.getSelectedItemPosition();
 						if (macGames[+position] != "-- Choose sport --") {
-							System.out.println("for spinner "
-									+ macGames[+position]);
+							
 							Toast.makeText(getApplicationContext(),
 									"You have selected " + macGames[+position],
 									Toast.LENGTH_LONG).show();
 							chosenGame = macGames[+position];
 						}
-						System.out.println("outside spinners if");
 					}
 
 					@Override
@@ -109,10 +114,9 @@ public class CreateEvent extends Activity {
 			// On click of create event button call the class eventCreation
 			@Override
 			public void onClick(View v) {
-
 				// Check for server connectivity issues
-				if (!checkServer(CreateEvent.this)) {
-					Toast.makeText(CreateEvent.this, "Server issue exists",
+				if (!checkServer(CreateEventActivity.this)) {
+					Toast.makeText(CreateEventActivity.this, "Server issue exists",
 							Toast.LENGTH_LONG).show();
 					return;
 				}
@@ -120,6 +124,7 @@ public class CreateEvent extends Activity {
 				// Call the execute method for AsyncTask
 				new eventCreation().execute();
 			}
+			
 
 			// Method to check connection errors
 			private boolean checkServer(Context mContext) {
@@ -142,7 +147,7 @@ public class CreateEvent extends Activity {
 			super.onPreExecute();
 
 			// Assign the progress dialog values
-			progressDialogEvent = new ProgressDialog(CreateEvent.this);
+			progressDialogEvent = new ProgressDialog(CreateEventActivity.this);
 			progressDialogEvent.setMessage("Creating Event");
 			progressDialogEvent.setIndeterminate(false);
 			progressDialogEvent.setCancelable(true);
@@ -197,10 +202,12 @@ public class CreateEvent extends Activity {
 					event_schedule));
 			passEventParams
 					.add(new BasicNameValuePair("chosenGame", chosenGame));
+			passEventParams
+			.add(new BasicNameValuePair("username", username));
 
 			// Send the HTTP request and parse the response through JSON
 			JSONObject jsonEventObj = jsonParserEvent.makeHttpRequest(
-					"http://129.107.150.47:8080/EventActions/createEvent.php",
+					"http://192.168.1.13:8080/EventActions/createEvent.php",
 					"POST", passEventParams);
 			Log.d("Create Response", jsonEventObj.toString());
 
@@ -232,7 +239,7 @@ public class CreateEvent extends Activity {
 
 			// start activity on success
 			if (result != null && result.equals("1")) {
-				Intent i = new Intent(getApplicationContext(), Dashboard.class);
+				Intent i = new Intent(getApplicationContext(), DashboardActivity.class);
 				startActivity(i);
 				finish();
 			} else {

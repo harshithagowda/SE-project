@@ -42,6 +42,7 @@ public class RegActivity extends Activity {
 	Button submit;
 	private static final String TAG_SUCCESS = "success";
 	final String emailPattern = "[a-zA-Z0-9._-]+@mavs.uta.edu";
+	int success=0;
 	
 	// Overridden method onCreate
 	@Override
@@ -74,6 +75,7 @@ public class RegActivity extends Activity {
 				if (string_email.matches(emailPattern) && (string_password.equals(string_retypePassword)) && (string_password.length() >= 6))
 				{
 					email_match=1;
+					new loginAccess().execute();
 				}
 				
 				// If the emailID is not a UTA ID,then display appropriate error message
@@ -102,7 +104,7 @@ public class RegActivity extends Activity {
 				}
 				
 				// Call to loginAccess class object
-				new loginAccess().execute();
+				
 			}
 
 			// Funtionality of server connectivity
@@ -127,7 +129,7 @@ public class RegActivity extends Activity {
 			
 			// Assign the progress dialog values
 			progressDialog = new ProgressDialog(RegActivity.this);
-			progressDialog.setMessage("Sign in...");
+			progressDialog.setMessage("Registration in progress");
 			progressDialog.setIndeterminate(false);
 			progressDialog.setCancelable(true);
 			progressDialog.show();
@@ -155,28 +157,23 @@ public class RegActivity extends Activity {
 			// Send the HTTP request and parse the response through JSON
 			JSONObject json = jsonParser
 					.makeHttpRequest(
-							"http://129.107.150.47:8080/RegisterActions/registerUser.php",
+							"http://192.168.1.13:8080/RegisterActions/registerUser.php",
 							"POST", passParams);
+
 			Log.d("Create Response", json.toString());
 
 			// If the JSON response returned SUCCESS then proceed with functionality
 			try {
-				
+				if(json != null){
 				// Get the status of from JSON
-				int success = json.getInt(TAG_SUCCESS);
+				 success = json.getInt(TAG_SUCCESS);
 				
 				// Enter based on JSON and validations
 				if (success == 1 && email_match == 1) {
-					flag = 0;
-					email_match = 0;
-					
-					// start activity on success
-					Intent i = new Intent(getApplicationContext(),
-							LoginActivity.class);
-					startActivity(i);
-					finish();
-				} else {
-					flag = 1;
+					return "1";
+					} else {
+					return "0";
+				}
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -185,8 +182,19 @@ public class RegActivity extends Activity {
 		}
 		
 		// Functionality on completion
-		protected void onPostExecute(String file_url) {
+		protected void onPostExecute(String result) {
+			if (progressDialog != null)
 			progressDialog.dismiss();
+			
+			if (success==1 && email_match==1) {
+			Intent i = new Intent(getApplicationContext(),
+					LoginActivity.class);
+			startActivity(i);
+			finish();
+			}
+			else {
+				// Else request failed
+			}
 		}
 	}
 }
