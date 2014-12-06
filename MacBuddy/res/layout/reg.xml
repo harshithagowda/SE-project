@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".CreateEventActivity" >
+    tools:context=".CreateEventActivity"
+    android:background="@drawable/rt" >
 
     <TextView
         android:id="@+id/txt"
@@ -11,7 +12,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Registration"
-        android:textSize="50dp" />
+        android:textStyle="bold"
+        android:textColor="#ffffff"
+        android:textSize="25sp" />
   
     <LinearLayout
     android:layout_width="match_parent"
@@ -54,35 +57,35 @@
                             android:layout_marginBottom="1dp"
                             android:layout_marginLeft="2dp"
                             android:layout_marginRight="1dp"
-                            android:background="#147dc8"
                             android:gravity="left|center"
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
                             android:text="UTA Email"
+                            android:textStyle="bold"
                             android:textAppearance="?android:attr/textAppearanceLarge"
                             android:textColor="#ffffff"
-                            android:textSize="18sp" />
+                            android:background="#000000"
+                            android:textSize="20sp" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="194dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.3"
                         android:orientation="horizontal" >
 
                         <EditText
                             android:id="@+id/emailId"
-                            android:layout_width="match_parent"
+                            android:layout_width="188dp"
                             android:layout_height="75dp"
                             android:layout_marginBottom="1dp"
                             android:layout_marginRight="2dp"
-                            android:layout_weight="1"
-                            android:background="#147dc8"
                             android:inputType="text"
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
-                            android:textSize="18sp" >
-
+                            android:textColor="#ffffff"
+                            android:textSize="25sp" 
+                            android:textStyle="bold">
+							
                             <requestFocus />
                         </EditText>
                     </LinearLayout>
@@ -132,8 +135,8 @@
                             android:layout_marginBottom="1dp"
                             android:layout_marginLeft="2dp"
                             android:layout_marginRight="1dp"
-                            android:background="#147dc8"
                             android:gravity="left|center"
+                            android:textStyle="bold"
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
                             android:text="User Name"
@@ -143,27 +146,26 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="192dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.3"
                         android:orientation="horizontal" >
 
                         <EditText
                             android:id="@+id/username"
-                            android:layout_width="match_parent"
+                            android:layout_width="190dp"
                             android:layout_height="75dp"
                             android:layout_marginBottom="1dp"
                             android:layout_marginRight="2dp"
-                            android:layout_weight="1"
-                            android:background="#147dc8"
+                            android:layout_weight="4"
                             android:inputType="text"
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
-                            android:textSize="18sp" >
-
-                            <requestFocus />
+                            android:textColor="#ffffff"
+                            android:textSize="25sp" 
+                            android:textStyle="bold">
                         </EditText>
                     </LinearLayout>
+
                 </LinearLayout>
      
 </LinearLayout>
@@ -194,37 +196,37 @@
                             android:layout_marginLeft="2dp"
                             android:layout_marginRight="1dp"
                             android:layout_marginTop="0dp"
-                            android:background="#147dc8"
                             android:gravity="left|center"
                             android:paddingLeft="10dp"
+                            android:textStyle="bold"
                             android:paddingRight="10dp"
                             android:text="Password"
                             android:textAppearance="?android:attr/textAppearanceLarge"
                             android:textColor="#ffffff"
-                            android:textSize="18sp" />
+                            android:textSize="20sp" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="180dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.3"
                         android:orientation="horizontal" >
 
                         <EditText
                             android:id="@+id/password"
-                            android:layout_width="match_parent"
+                            android:layout_width="165dp"
                             android:layout_height="match_parent"
                             android:layout_marginBottom="1dp"
                             android:layout_marginRight="2dp"
-                            android:layout_weight="1"
-                            android:background="#147dc8"
+                            android:layout_weight="1.48"
                             android:ems="10"
+                            android:inputType="textPassword"
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
-                            android:textSize="18sp"
-                            android:inputType="textPassword" />
-
+                            android:textColor="#ffffff"
+                            android:textSize="25sp" 
+                            android:textStyle="bold"/>
                     </LinearLayout>
+
                 </LinearLayout>
             </LinearLayout>
 
@@ -254,35 +256,34 @@
                             android:layout_marginLeft="2dp"
                             android:layout_marginRight="1dp"
                             android:layout_marginTop="0dp"
-                            android:background="#147dc8"
                             android:gravity="left|center"
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
-                            android:text="Retype password"
+                            android:textStyle="bold"
+                            android:text="Retype Password"
                             android:textAppearance="?android:attr/textAppearanceLarge"
                             android:textColor="#ffffff"
-                            android:textSize="18sp" />
+                            android:textSize="20sp" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="191dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.3"
                         android:orientation="horizontal" >
 
                         <EditText
                             android:id="@+id/retypepwd"
-                            android:layout_width="match_parent"
+                            android:layout_width="188dp"
                             android:layout_height="match_parent"
                             android:layout_marginBottom="1dp"
                             android:layout_marginRight="2dp"
-                            android:layout_weight="1"
-                            android:background="#147dc8"
                             android:ems="10"
+                            android:inputType="textPassword"
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
-                            android:textSize="18sp"
-                            android:inputType="textPassword" />
+                            android:textColor="#ffffff"
+                            android:textSize="25sp" 
+                            android:textStyle="bold"/>
 
                     </LinearLayout>
                 </LinearLayout>
@@ -321,12 +322,16 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:layout_weight="1" >
+
             <Button
                 android:id="@+id/registerButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#f36b09"
+                android:layout_height="match_parent"
+                android:background="#C0C0C0"
+                android:textStyle="bold"
+                android:textSize="25sp"
                 android:text="Register" />
+
             </LinearLayout>
             </LinearLayout>
             </LinearLayout>

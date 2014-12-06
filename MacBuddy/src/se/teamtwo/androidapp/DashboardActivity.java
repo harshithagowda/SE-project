@@ -32,6 +32,51 @@ public class DashboardActivity extends Activity {
 				// navigates from the dashboard to create event screen
 			}
 		});
+		Button currentButton = (Button) findViewById(R.id.current_event_display_button);
+		currentButton.setOnClickListener(new OnClickListener() {
+			// onclicklistener for create event
+			public void onClick(View v) {
+				Intent i = new Intent(DashboardActivity.this, SelectEvent.class);
+				i.putExtra("username",username);
+				startActivity(i);
+				// navigates from the dashboard to create event screen
+			}
+		});
+		Button deleteButton = (Button) findViewById(R.id.delete_button);
+		deleteButton.setOnClickListener(new OnClickListener() {
+			
+			// onclicklistener for create event
+			public void onClick(View v) {
+				Intent i = new Intent(DashboardActivity.this, DeleteEventActivity.class);
+				i.putExtra("username",username);
+				startActivity(i);
+				// navigates from the dashboard to create event screen
+			}
+		});
+	
+	Button logoutButton = (Button) findViewById(R.id.logout_button);
+	logoutButton.setOnClickListener(new OnClickListener() {
+		
+		// onclicklistener for create event
+		public void onClick(View v) {
+			Intent i = new Intent(DashboardActivity.this, LoginActivity.class);
+			//i.putExtra("username",username);
+			startActivity(i);
+			// navigates from the dashboard to create event screen
+		}
+	});
+	
+	Button user_profile_button = (Button) findViewById(R.id.user_profile_button);
+	user_profile_button.setOnClickListener(new OnClickListener() {
+	// onclicklistener for create event
+	public void onClick(View v) {
+	Intent i = new Intent(DashboardActivity.this, UserProfileActivity.class);
+	i.putExtra("username",username);
+	startActivity(i);
+	// navigates from the dashboard to user profile screen
+	}
+	});
+	
 	}
 
 	@Override
@@ -48,5 +93,14 @@ public class DashboardActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	public void onBackPressed()
+	{ 
+		//finish();
+		Intent i = new Intent(DashboardActivity.this, MainActivity.class);
+		i.putExtra("username",username);
+		startActivity(i);
 	}
 }

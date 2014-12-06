@@ -22,8 +22,8 @@
     <string name="volley_ball">Volley Ball</string>
     <string name="user_name">User Name</string>
     <string name="user_name_hint">Enter your username</string>
-    <string name="create_event_button">Create EVENTS</string>
-    <string name="profile_button">User PROFILE</string>
-    <string name="current_event_button">Current EVENTS</string>
+    <string name="create_event_button">Create Events</string>
+    <string name="profile_button">User Profile</string>
+    <string name="current_event_button">Current Events</string>
 
 </resources>

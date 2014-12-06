@@ -8,6 +8,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -35,25 +36,28 @@ public class CreateEventActivity extends Activity {
 	//public static final String PREFS_NAME = "EventCreationPrefs";
 
 	// Variable declarations
-	EditText edittext_event_name;
+	EditText edittext_event_name, edittext_event_limit;
 	DatePicker datePicker_event_date;
 	TimePicker timePicker_event_time;
 	Button createButton;
 	String event_schedule;
-	String string_event_name;
+	String string_event_name, string_event_limit;
 	String username;
+	//String limit;
 	ProgressDialog progressDialogEvent;
 	int eventCheck = 0;
 	JSONParser jsonParserEvent = new JSONParser();
+	JSONParser jsonParserReg = new JSONParser();
 	Button submit;
 	Spinner gameSpinner;
 	String[] macGames = { "-- Choose sport --", "Badminton", "Basketball",
 			"Gym", "Pool", "Racquetball", "Table Tennis", "Soccer", "Swimming",
 			"Volleyball", "Wall Climbing" };
 	private static final String EVENT_SUCCESS = "success";
-	String chosenGame = "test";
+	String chosenGame = "";
 	ArrayAdapter<String> adapter;
 	Bundle extras;
+	int success = 0;
 	
 	// Overridden method onCreate
 	@Override
@@ -77,6 +81,8 @@ public class CreateEventActivity extends Activity {
 
 		// Get the selected time from Calendar
 		timePicker_event_time = (TimePicker) findViewById(R.id.create_event_time);
+		
+		edittext_event_limit = (EditText)findViewById(R.id.et_event_limit);
 
 		// Link to button
 		createButton = (Button) findViewById(R.id.createEventButton);
@@ -95,9 +101,9 @@ public class CreateEventActivity extends Activity {
 						int position = gameSpinner.getSelectedItemPosition();
 						if (macGames[+position] != "-- Choose sport --") {
 							
-							Toast.makeText(getApplicationContext(),
+							/*Toast.makeText(getApplicationContext(),
 									"You have selected " + macGames[+position],
-									Toast.LENGTH_LONG).show();
+									Toast.LENGTH_LONG).show();*/
 							chosenGame = macGames[+position];
 						}
 					}
@@ -114,13 +120,30 @@ public class CreateEventActivity extends Activity {
 			// On click of create event button call the class eventCreation
 			@Override
 			public void onClick(View v) {
+				String eventName = edittext_event_name.getText().toString().trim();
+				String eventLimit = edittext_event_limit.getText().toString().trim();
 				// Check for server connectivity issues
 				if (!checkServer(CreateEventActivity.this)) {
-					Toast.makeText(CreateEventActivity.this, "Server issue exists",
+					/*Toast.makeText(CreateEventActivity.this, "Server issue exists",
+							Toast.LENGTH_LONG).show();*/
+					return;
+				}
+				if (chosenGame.equals("")) {
+					Toast.makeText(CreateEventActivity.this, "Please select a game to invite",
 							Toast.LENGTH_LONG).show();
 					return;
 				}
-
+				if (eventName.equals("")) {
+					Toast.makeText(CreateEventActivity.this, "Please enter an event name",
+							Toast.LENGTH_LONG).show();
+					return;
+				}
+				if (eventLimit.equals("")) {
+					Toast.makeText(CreateEventActivity.this, "Please set the event limit",
+							Toast.LENGTH_LONG).show();
+					return;
+				}
+				
 				// Call the execute method for AsyncTask
 				new eventCreation().execute();
 			}
@@ -160,10 +183,11 @@ public class CreateEventActivity extends Activity {
 
 			// Prepare the list of parameters to be passed as part of HTTP request
 			List<NameValuePair> passEventParams = new ArrayList<NameValuePair>();
-
+			List<NameValuePair> passRegParams = new ArrayList<NameValuePair>();
 			// Assign the edit text value to a string
 			string_event_name = edittext_event_name.getText().toString().trim();
-
+			string_event_limit = edittext_event_limit.getText().toString().trim();
+			System.out.println("string_event_limit "+string_event_limit);
 			// Get the date and time details to bind it to a calendar object
 			Calendar cal = Calendar.getInstance();
 			cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
@@ -191,7 +215,9 @@ public class CreateEventActivity extends Activity {
 					.append(dp_Date.toString()).append(" ")
 					.append(tp_Hour.toString()).append(":")
 					.append(tp_Minute.toString()).append(":00");
-
+			
+			
+			System.out.println("after date "+ sb);
 			// Now the schedule is converted to a string and passed with the request
 			event_schedule = sb.toString();
 
@@ -204,23 +230,55 @@ public class CreateEventActivity extends Activity {
 					.add(new BasicNameValuePair("chosenGame", chosenGame));
 			passEventParams
 			.add(new BasicNameValuePair("username", username));
+			
+			passEventParams
+			.add(new BasicNameValuePair("eventlimit", string_event_limit));
 
+			System.out.println("after binding params");
 			// Send the HTTP request and parse the response through JSON
 			JSONObject jsonEventObj = jsonParserEvent.makeHttpRequest(
-					"http://192.168.1.13:8080/EventActions/createEvent.php",
+					"http://omega.uta.edu/~akk1814/EventActions/createEvent.php",
 					"POST", passEventParams);
 			Log.d("Create Response", jsonEventObj.toString());
 
+			System.out.println("after json response");
+			
+			
+			String evenTimeArr[] = event_schedule.split("\\s");
+			System.out.println("evenTimeArr"+evenTimeArr);
+			String time[] = evenTimeArr[1].split(":");
+			System.out.println("time"+time);
+			String date[] = evenTimeArr[0].split("-");
+			System.out.println("date"+date);
+			String timeDisp = time[0]+":"+time[1]+" ON "+date[1]+"-"+date[2]+"-"+date[0];
+			System.out.println("timeDisp"+timeDisp);
+			
+			passRegParams.add(new BasicNameValuePair("eventName", string_event_name));
+			passRegParams.add(new BasicNameValuePair("chosenGame", chosenGame));
+			passRegParams.add(new BasicNameValuePair("eventtime", timeDisp));
+			passRegParams.add(new BasicNameValuePair("username", username));
+			
+			
+			System.out.println("after binding params");
+			// Send the HTTP request and parse the response through JSON
+			JSONObject jsonRegObj = jsonParserReg.makeHttpRequest(
+					"http://omega.uta.edu/~akk1814/GCMDemo/index.php",
+					"POST", passRegParams);
+			//Log.d("Create Notification log ", jsonRegObj.toString());
+
+			System.out.println("after json response");
+			
 			// If the JSON response returned SUCCESS then proceed with functionality
 			try {
 				if (jsonEventObj != null) {
 					// Get the status of from JSON
-					int success = jsonEventObj.getInt(EVENT_SUCCESS);
+					success = jsonEventObj.getInt(EVENT_SUCCESS);
 
+					System.out.println("success is "+success);
 					// Return values based on JSON
 					if (success == 1) {
 						return "1";
-					} else {
+					} else{
 						return "0";
 					}
 				}
@@ -237,15 +295,30 @@ public class CreateEventActivity extends Activity {
 			if (progressDialogEvent != null)
 				progressDialogEvent.dismiss();
 
-			// start activity on success
-			if (result != null && result.equals("1")) {
-				Intent i = new Intent(getApplicationContext(), DashboardActivity.class);
-				startActivity(i);
-				finish();
-			} else {
-				// Else request failed
+			if(success == 0)
+			{
+				Toast.makeText(
+						getApplicationContext(),
+						"Please enter all the mandatory fields",
+						Toast.LENGTH_SHORT).show();
 			}
-
+			// start activity on success
+			if (success == 1) {
+				System.out.println("before intent");
+				
+				
+				
+				
+				Intent i = new Intent(getApplicationContext(), DashboardActivity.class);
+				i.putExtra("username",username);
+				startActivity(i);
+				System.out.println("after intent");
+				finish();
+			} 
 		}
+	}
+	public void onBackPressed()
+	{
+	    finish();
 	}
 }

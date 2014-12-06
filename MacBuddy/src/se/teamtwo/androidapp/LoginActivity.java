@@ -45,6 +45,7 @@ public class LoginActivity extends Activity {
 	HttpClient httpClient;
 	List<NameValuePair> nameValuePairs;
 	TextView textview_password = null;
+	int emptyFieldsCount = 0;
 
 	// Overridden method onCreate
 	@Override
@@ -56,6 +57,8 @@ public class LoginActivity extends Activity {
 		edittext_name = (EditText) findViewById(R.id.username);
 		edittext_password = (EditText) findViewById(R.id.password);
 		
+		
+		
 		// Set to the login button
 		Button button = (Button) findViewById(R.id.loginButton);
 		
@@ -64,14 +67,14 @@ public class LoginActivity extends Activity {
 			
 			// Initiate Progress dialog
 			public void onClick(View v) {
-				dialog = ProgressDialog.show(LoginActivity.this, "",
-						"Validate user credentials", true);
-				// Start a new thread
+					dialog = ProgressDialog.show(LoginActivity.this, "","Validate user credentials", true);
 				new Thread(new Runnable() {
 					public void run() {
+						//
 						loginUser();
 					}
 				}).start();
+				
 			}
 		});
 	}
@@ -85,7 +88,8 @@ public class LoginActivity extends Activity {
 			httpClient = new DefaultHttpClient();
 			
 			// Send the HTTP request
-			httpPost = new HttpPost("http://192.168.1.13:8080/LoginActions/loginUser.php");
+			httpPost = new HttpPost("http://omega.uta.edu/~akk1814/LoginActions/loginUser.php");
+			//httpPost = new HttpPost("http://129.107.237.9:8080/LoginActions/loginUser.php");
 			
 			// Bind the parameters
 			nameValuePairs = new ArrayList<NameValuePair>(2);
@@ -119,8 +123,8 @@ public class LoginActivity extends Activity {
 			if (responseLogin.equalsIgnoreCase("Authorized successfully")) {
 				runOnUiThread(new Runnable() {
 					public void run() {
-						Toast.makeText(LoginActivity.this, "Login Success",
-								Toast.LENGTH_SHORT).show();
+						/*Toast.makeText(LoginActivity.this, "Login Success",
+								Toast.LENGTH_SHORT).show();*/
 
 					}
 				});
@@ -132,13 +136,54 @@ public class LoginActivity extends Activity {
                     startActivity(i);
 			} 
 			// If user details not found in Database, display appropriate error message
-			else {
+			else if (responseLogin.equalsIgnoreCase("missing fields")){
+				LoginActivity.this.runOnUiThread(new Runnable() {
+					public void run() {
+						AlertDialog.Builder builder = new AlertDialog.Builder(
+								LoginActivity.this);
+						builder.setTitle("Missing fields");
+						builder.setMessage("Please enter your login credentials")
+								.setCancelable(false)
+								.setPositiveButton("OK",
+										new DialogInterface.OnClickListener() {
+											public void onClick(
+													DialogInterface dialog,
+													int id) {
+											}
+										});
+						AlertDialog alert = builder.create();
+						alert.show();
+					}
+				});
+			}
+			else if (responseLogin.equalsIgnoreCase("Authorization failed")){
+				LoginActivity.this.runOnUiThread(new Runnable() {
+					public void run() {
+						AlertDialog.Builder builder = new AlertDialog.Builder(
+								LoginActivity.this);
+						builder.setTitle("Invalid credentials");
+						builder.setMessage("Login unsuccessful!")
+								.setCancelable(false)
+								.setPositiveButton("OK",
+										new DialogInterface.OnClickListener() {
+											public void onClick(
+													DialogInterface dialog,
+													int id) {
+											}
+										});
+						AlertDialog alert = builder.create();
+						alert.show();
+					}
+				});
+			}
+			else
+			{
 				LoginActivity.this.runOnUiThread(new Runnable() {
 					public void run() {
 						AlertDialog.Builder builder = new AlertDialog.Builder(
 								LoginActivity.this);
 						builder.setTitle("Unable to Login");
-						builder.setMessage("User not Found!!!")
+						builder.setMessage("User doesn't exist! Register through MAVS EMAIL ID")
 								.setCancelable(false)
 								.setPositiveButton("OK",
 										new DialogInterface.OnClickListener() {
@@ -172,5 +217,13 @@ public class LoginActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	@Override
+	public void onBackPressed()
+	{ 
+		Intent i = new Intent(LoginActivity.this, MainActivity.class);
+		i.putExtra("username",edittext_name
+				.getText().toString().trim());
+		startActivity(i);
 	}
 }
